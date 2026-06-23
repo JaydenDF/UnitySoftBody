@@ -1,29 +1,50 @@
 using System;
+using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
-[Serializable] public struct  MassPoint
+public class  MassPoint : MonoBehaviour
 {
     // Public Variables
-    public Vector2 position;
-    public float mass;
-    public GameObject dotPrefab;
+    private float mass = 1;
+    public Vector2 velocity;
+    public Vector2 acceleration;
     
     
-    // Read-only variables, should only be changed within this struct.
-    public Vector2 Velocity { get; private set; }
-    public Vector2 Force { get; private set; }
-    public MassPoint(Vector2 _mpPosition, float _mpMass, GameObject _mpDot)
+    // Verlet integration
+    public Vector2 force;
+    private Vector2 currentPosition;
+    private Vector2 previousPosition;
+
+    private void Start()
     {
-        position = _mpPosition;
-        mass = _mpMass;
-        dotPrefab = _mpDot;
-        Velocity = default;
-        Force = default;
+        currentPosition = transform.position;
+        previousPosition = currentPosition;
     }
     
-    public void ApplyGravity(float deltaTime)
+    private void FixedUpdate()
     {
-        position.y += 9.81f * deltaTime;
-        Console.WriteLine("falling, dreaming, i know you want to cry all night");
+        //ApplyGravity();
+        
+        // Movement based of Verlet integration (implementation help from ChatGPT)
+        Vector2 acceleration = force / mass;
+        Vector2 velocity = currentPosition - previousPosition;
+        Vector2 newPosition = currentPosition + velocity +  acceleration * Time.deltaTime;
+        
+        previousPosition = currentPosition;
+        currentPosition = newPosition;
+        
+        transform.position = currentPosition;
+        force = Vector2.zero; 
+    }
+
+    private void ApplyGravity()
+    {
+        velocity.y -= 9.81f * Time.deltaTime;
+        transform.position += (Vector3)(velocity * Time.deltaTime) ;
+    }
+
+    public void AddForce(Vector2 _force)
+    {
+        force += _force;
     }
 }

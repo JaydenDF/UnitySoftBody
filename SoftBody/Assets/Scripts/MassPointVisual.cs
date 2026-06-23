@@ -12,6 +12,6 @@ public class MassPointVisual : MonoBehaviour
 
     void Update()
     {
-        transform.position = mpAgent.position;
+        
     }
 }
