@@ -21,8 +21,6 @@ public class  MassPoint : MonoBehaviour
     
     private void FixedUpdate()
     {
-        //ApplyGravity();
-        
         // Movement based of Verlet integration (implementation help from ChatGPT)
         Vector2 acceleration = force / mass;
         Vector2 velocity = currentPosition - previousPosition;

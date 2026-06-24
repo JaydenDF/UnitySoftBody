@@ -31,13 +31,13 @@ public class SoftBodyController : MonoBehaviour
         SpringDrawer();
         
         // Store desired area
-        desiredArea = CalculateCurrentArea();
+        desiredArea = CalculateCurrentArea() + 1f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        ApplyGravity();
+        //ApplyGravity();
         Dilation();
     }
 
