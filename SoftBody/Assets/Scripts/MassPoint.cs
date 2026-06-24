@@ -5,10 +5,7 @@ using UnityEngine;
 public class  MassPoint : MonoBehaviour
 {
     // Public Variables
-    private float mass = 1;
-    public Vector2 velocity;
-    public Vector2 acceleration;
-    
+    public float mass = 0.1f;
     
     // Verlet integration
     public Vector2 force;
@@ -17,6 +14,7 @@ public class  MassPoint : MonoBehaviour
 
     private void Start()
     {
+        mass = 1;
         currentPosition = transform.position;
         previousPosition = currentPosition;
     }
@@ -28,7 +26,7 @@ public class  MassPoint : MonoBehaviour
         // Movement based of Verlet integration (implementation help from ChatGPT)
         Vector2 acceleration = force / mass;
         Vector2 velocity = currentPosition - previousPosition;
-        Vector2 newPosition = currentPosition + velocity +  acceleration * Time.deltaTime;
+        Vector2 newPosition = currentPosition + velocity +  acceleration * Time.deltaTime * Time.deltaTime;
         
         previousPosition = currentPosition;
         currentPosition = newPosition;
@@ -37,14 +35,20 @@ public class  MassPoint : MonoBehaviour
         force = Vector2.zero; 
     }
 
-    private void ApplyGravity()
-    {
-        velocity.y -= 9.81f * Time.deltaTime;
-        transform.position += (Vector3)(velocity * Time.deltaTime) ;
-    }
-
     public void AddForce(Vector2 _force)
     {
         force += _force;
+    }
+    
+    public void ResolveCollision(Vector2 normal, float restitution = 0.99f)
+    {
+        Vector2 velocity = currentPosition - previousPosition;
+        velocity = Vector2.Reflect(velocity, normal) * restitution;
+        previousPosition = currentPosition - velocity;
+    }
+    
+    public Vector2 GetVelocity()
+    {
+        return currentPosition - previousPosition;
     }
 }

@@ -48,7 +48,7 @@ public class Spring : MonoBehaviour
 
         Vector2 springForce = dir * (extension * stifness);
 
-        Vector2 relativeVelocity = mpB.velocity - mpA.velocity;
+        Vector2 relativeVelocity = mpB.GetVelocity() - mpA.GetVelocity();
         Vector2 dampingForce = dir * (Vector2.Dot(relativeVelocity, dir) * damping);
 
         Vector2 totalForce = springForce + dampingForce;
